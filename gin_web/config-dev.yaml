@@ -1,0 +1,8 @@
+http_addr: ${GIN_HTTP_ADDR}
+user_grpc_addr: ${USER_GRPC_ADDR}
+file_grpc_addr: ${FILE_GRPC_ADDR}
+storage_grpc_addr: ${STORAGE_GRPC_ADDR}
+analysis_grpc_addr: ${ANALYSIS_GRPC_ADDR}
+jwt_secret: ${JWT_SECRET}
+web_origin: ${WEB_ORIGIN}
+
