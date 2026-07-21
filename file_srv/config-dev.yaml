@@ -1,0 +1,7 @@
+grpc_addr: ${FILE_GRPC_ADDR}
+storage_grpc_addr: ${STORAGE_GRPC_ADDR}
+mysql: ${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+redis: ${REDIS_ADDR}
+rocketmq_namesrv: ${ROCKETMQ_NAMESRV}
+bucket: ${CEPH_BUCKET}
+
