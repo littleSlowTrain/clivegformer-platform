@@ -1,0 +1,9 @@
+grpc_addr: ${USER_GRPC_ADDR}
+mysql:
+  host: ${MYSQL_HOST}
+  port: ${MYSQL_PORT}
+  database: ${MYSQL_DATABASE}
+  user: ${MYSQL_USER}
+  password: ${MYSQL_PASSWORD}
+jwt_secret: ${JWT_SECRET}
+
