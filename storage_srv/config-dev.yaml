@@ -1,0 +1,9 @@
+grpc_addr: ${STORAGE_GRPC_ADDR}
+file_grpc_addr: ${FILE_GRPC_ADDR}
+ceph:
+  endpoint: ${CEPH_ENDPOINT}
+  access_key: ${CEPH_ACCESS_KEY}
+  secret_key: ${CEPH_SECRET_KEY}
+  bucket: ${CEPH_BUCKET}
+  region: ${CEPH_REGION}
+rocketmq_namesrv: ${ROCKETMQ_NAMESRV}
