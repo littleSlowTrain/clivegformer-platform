@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package clivegformer.analysis.v1;
+option go_package = "github.com/clivegformer/platform/contracts/gen/analysis/v1;analysisv1";
+
+service AnalysisService {
+  rpc ListVariables(VariablesRequest) returns (VariablesResponse);
+  rpc AnalyzeNDVI(AnalysisRequest) returns (AnalysisResponse);
+  rpc AnalyzeTimeSeries(AnalysisRequest) returns (AnalysisResponse);
+}
+
+message VariablesRequest { uint64 user_id = 1; uint64 user_file_id = 2; }
+message Variable { string name = 1; string dtype = 2; repeated int64 shape = 3; repeated string dimensions = 4; }
+message VariablesResponse { repeated Variable variables = 1; }
+message AnalysisRequest { uint64 user_id = 1; uint64 user_file_id = 2; string variable = 3; string red_variable = 4; string nir_variable = 5; int32 max_points = 6; }
+message Point { string label = 1; double value = 2; }
+message AnalysisResponse { repeated Point points = 1; double minimum = 2; double maximum = 3; double mean = 4; double change_rate = 5; int64 missing_count = 6; string summary = 7; uint64 analysis_result_id = 8; bool cache_hit = 9; int64 generated_at = 10; }

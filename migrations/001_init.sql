@@ -1,0 +1,59 @@
+CREATE DATABASE IF NOT EXISTS clivegformer CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE clivegformer;
+
+CREATE TABLE IF NOT EXISTS `user` (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  username VARCHAR(64) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  role VARCHAR(32) NOT NULL DEFAULT 'user',
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id), UNIQUE KEY uk_user_username (username), UNIQUE KEY uk_user_email (email)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS file_object (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  file_hash VARCHAR(64) NOT NULL,
+  file_name VARCHAR(512) NOT NULL,
+  file_size BIGINT NOT NULL,
+  bucket VARCHAR(255) NOT NULL,
+  storage_path VARCHAR(1024) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id), UNIQUE KEY uk_file_hash (file_hash), KEY idx_file_status (status)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS user_file (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  file_id BIGINT UNSIGNED NOT NULL,
+  filename VARCHAR(512) NOT NULL,
+  folder VARCHAR(1024) NOT NULL DEFAULT '/',
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id), UNIQUE KEY uk_user_file_path (user_id,file_id,folder(191),filename(191)),
+  KEY idx_user_file_list (user_id,created_at), KEY idx_user_folder (user_id,folder(191)),
+  CONSTRAINT fk_user_file_object FOREIGN KEY (file_id) REFERENCES file_object(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS upload_session (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  file_hash VARCHAR(64) NOT NULL,
+  filename VARCHAR(512) NOT NULL,
+  folder VARCHAR(1024) NOT NULL DEFAULT '/',
+  file_size BIGINT NOT NULL,
+  chunk_size INT NOT NULL,
+  chunk_count INT NOT NULL,
+  upload_mode TINYINT NOT NULL,
+  ceph_upload_id VARCHAR(255) NOT NULL DEFAULT '',
+  bucket VARCHAR(255) NOT NULL,
+  storage_path VARCHAR(1024) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  PRIMARY KEY (id), UNIQUE KEY uk_upload_hash (file_hash), KEY idx_upload_user (user_id,status)
+) ENGINE=InnoDB;
+

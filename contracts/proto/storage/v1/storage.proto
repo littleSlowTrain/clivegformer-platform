@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package clivegformer.storage.v1;
+option go_package = "github.com/clivegformer/platform/contracts/gen/storage/v1;storagev1";
+
+service StorageService {
+  rpc BeginUpload(BeginUploadRequest) returns (BeginUploadResponse);
+  rpc UploadPart(stream UploadPartRequest) returns (UploadPartResponse);
+  rpc ListParts(ListPartsRequest) returns (ListPartsResponse);
+  rpc CompleteUpload(CompleteUploadRequest) returns (CompleteUploadResponse);
+  rpc AbortUpload(AbortUploadRequest) returns (Empty);
+  rpc Download(DownloadRequest) returns (stream DownloadChunk);
+  rpc ReadRange(ReadRangeRequest) returns (stream DownloadChunk);
+}
+
+message Empty {}
+message BeginUploadRequest { uint64 upload_id = 1; string bucket = 2; string object_key = 3; int32 mode = 4; string content_type = 5; }
+message BeginUploadResponse { string ceph_upload_id = 1; }
+message UploadPartMeta { uint64 user_id = 1; uint64 upload_id = 2; int32 part_number = 3; int64 size = 4; string chunk_sha256 = 5; }
+message UploadPartRequest { UploadPartMeta meta = 1; bytes data = 2; }
+message UploadPartResponse { int32 part_number = 1; string etag = 2; int64 size = 3; }
+message Part { int32 part_number = 1; string etag = 2; int64 size = 3; }
+message ListPartsRequest { uint64 user_id = 1; uint64 upload_id = 2; }
+message ListPartsResponse { repeated Part parts = 1; }
+message CompleteUploadRequest { uint64 user_id = 1; uint64 upload_id = 2; repeated Part parts = 3; }
+message CompleteUploadResponse { string bucket = 1; string object_key = 2; string etag = 3; }
+message AbortUploadRequest { uint64 user_id = 1; uint64 upload_id = 2; }
+message DownloadRequest { uint64 user_id = 1; uint64 user_file_id = 2; int64 range_start = 3; int64 range_end = 4; }
+message ReadRangeRequest { uint64 user_id = 1; uint64 user_file_id = 2; int64 offset = 3; int64 length = 4; }
+message DownloadChunk { bytes data = 1; int64 total_size = 2; string filename = 3; string content_type = 4; }
+
